@@ -12,4 +12,5 @@
 
 ----------------
 ## Usage 
-`http://localhost:3000?roll={roll_no_here}`
+`http://localhost:3000?roll={roll_no_here}` \
+```Currently displaying all the data which is cached.```
