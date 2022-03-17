@@ -7,6 +7,8 @@
 `cd KNIT-Result-API`
 ### Install Dependencies
 `npm install`
+## Set Docker Container
+`docker-compose up`
 ### Run Project
  `npm start`
 
