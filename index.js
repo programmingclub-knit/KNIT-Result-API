@@ -6,6 +6,17 @@ const async = require("async");
 var port =  3000;
 global.results = {};  // global variable for all results
 
+function cache_check(roll,_callback){
+  console.log("callback"+roll);
+  client.exists(roll,(err, reply)=>{
+    if(reply == 0){
+      console.log("Not in cache");
+      getResult_id(roll,undefined,_callback);
+    } 
+    else _callback();
+  })
+}
+
 app.get("/",async (req, res) => {
     console.log(req.query.roll);
     let roll = req.query.roll;
@@ -22,22 +33,25 @@ app.get("/cache",async (req, res) => {
        return res.status(400).json({message:"Invalid Input"});
     }
     else{
-
-      client.hgetall(roll,(err,reply)=>{
-        if(reply == null || reply == undefined){
-          return res.status(200).json({message:"Not available"});
-        }
-        async.map(Object.keys(reply),function(key, cb){
-            getResult_data(key,reply[key]);
-            client.hgetall(key,(err,rep)=>{
-                if(err) console.log(err); 
-                cb(null, rep);                
-            })
-        },(err, resp)=>{
-            res.json(resp);
-        })
-          
-    });
+     
+      cache_check(roll, function(){
+        
+        client.hgetall(roll,(err,reply)=>{
+          if(reply == null || reply == undefined){
+            return res.status(200).json({message:"Not available"});
+          }
+          async.map(Object.keys(reply),function(key, cb){
+              client.hgetall(key,(err,rep)=>{
+                  if(err) console.log(err); 
+                  cb(null, rep);                
+              })
+          },(err, resp)=>{
+              res.json(resp);
+          })
+            
+        });
+      })
+ 
     }      
 });
 
