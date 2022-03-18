@@ -1,11 +1,15 @@
 const axios = require("axios");
-const e = require("express");
 const { JSDOM } = require('jsdom');
 const async = require("async");
 const redis = require('redis');
 
 // Create Redis Client
-let client = redis.createClient();
+const client = redis.createClient({
+  host: process.env.REDIS_HOSTNAME,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD
+});
+
 client.on('connect', function(){
   console.log('Connected to Redis...');
 });

@@ -4,7 +4,6 @@ const app = express()
 const {client, getResult_id, getResult_data} = require('./modules/results');
 const async = require("async");
 var port = process.env.PORT || 3000;
-global.results = {};  // global variable for all results
 
 function cache_check(roll,_callback){
   console.log("callback"+roll);
