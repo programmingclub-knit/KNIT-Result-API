@@ -42,7 +42,7 @@ exports.getResult_id = (roll, res, clb) => {
       async.map(element.childNodes,(ele, cb)=>{
            var result_id = ele.value;
            var result_name = ele.textContent;
-           if(result_id != 0)  {
+           if(result_id != 0 && result_id !== undefined)  {
               client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
               getResult_data(result_id,result_name);
               cb(null,result_id);
