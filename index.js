@@ -10,7 +10,7 @@ function cache_check(roll,_callback){
   // client.exists(roll,(err, reply)=>{
   //   if(reply == 0){
   //     console.log("Not in cache");
-      getResult_id(roll,undefined,_callback);
+      return getResult_id(roll,undefined,_callback);
   //   } 
   //   else _callback();
   // })
@@ -32,7 +32,7 @@ app.get("/cache",async (req, res) => {
     }
     else{
      
-      cache_check(roll, function(){
+      return cache_check(roll, function(){
         
         client.hgetall(roll,(err,reply)=>{
           if(reply == null || reply == undefined){
@@ -44,7 +44,7 @@ app.get("/cache",async (req, res) => {
                   cb(null, rep);                
               })
           },(err, resp)=>{
-              res.json(resp);
+              return res.json(resp);
           })
             
         });
