@@ -41,7 +41,7 @@ exports.getResult_id = (roll, res, clb) => {
            var result_id = ele.value;
            var result_name = ele.textContent;
            
-           if(result_id != 0 && result_id !== undefined) {
+           if(result_id != 0 && result_id !== undefined && result_name !== undefined) {
               client.hget(roll, result_id, (erro, resu)=>{
                console.log(`HGET - ${roll} - ${result_id} = ` + resu);
                if(erro){
@@ -62,7 +62,7 @@ exports.getResult_id = (roll, res, clb) => {
         if(res)
           return res.status(200).json({message:"OK"});
         if(clb){
-         clb();
+           clb();
          } 
        }
     )
