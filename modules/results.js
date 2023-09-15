@@ -20,16 +20,16 @@ client.on('connect', function(){
 
 exports.client = client;
 exports.getResult_id = (roll, res, clb) => {
-    var body = `__VIEWSTATE=%2FwEPDwUILTg0MjU4NzIPZBYCAgMPZBYCAg0PEGQQFQQMLS0tU0VMRUNULS0tHlJFR1VMQVIgKDIwMjAtMjEpIFNlbWVzdGVyIDUtNh5SRUdVTEFSICgyMDE5LTIwKSBTZW1lc3RlciAzLTQeUkVHVUxBUiAoMjAxOC0xOSkgU2VtZXN0ZXIgMS0yFQQBMAUyNjQ2NAUyMjU4NwUxMzg2MhQrAwRnZ2dnZGRkT0Fi%2FBERAbi1uwskxzG%2BlLAJtOtXGEHHfX6ZE3nmBZk%3D&__VIEWSTATEGENERATOR=DB318265&__EVENTVALIDATION=%2FwEdAAxFDxZsB7U7Mr0OMg2h7n7UPau1mCuCtJHSVk85VtMAdDXliG498sM6kPyFRnmInPliZaJV0KqU6oRXH5%2B1i68lRXVjSn29OtWDx6WHflOXDNPJtD4x1ZskjCWlMi4OhV%2BO1N1XNFmfsMXJasjxX85jwWQRnAmXw%2F6HLW40JR6%2F6m7T4XcIIkhMxHxZFaWqrZ7vUYtVl4HZU8C7SmoRKtLik2NTAc7tYwQ6Dz2X5p%2BJt0%2FmGxI43a3wQF1oomopj%2BhwFUnRqpCBQzeo3%2B%2B1zmpQf3%2B17nV%2FdYRVF%2FCz9tfZDw%3D%3D&hdnCourse=04&hdnsem=1&hdnsyl=G&hdnstts=PASS&txtrollno=${roll}&btnSearch=Search&ddlResult=0`;
+    var body = "__VIEWSTATE=%2FwEPDwUILTg0MjU4NzJkZL8EOn15thYAm%2BBkeKl3nNMIva19zdwLaoiAXL3GaCA%2B&__VIEWSTATEGENERATOR=DB318265&__EVENTVALIDATION=%2FwEdAAg8dzOkRxl7U%2BzAyTtYbyRXPau1mCuCtJHSVk85VtMAdDXliG498sM6kPyFRnmInPliZaJV0KqU6oRXH5%2B1i68lRXVjSn29OtWDx6WHflOXDNPJtD4x1ZskjCWlMi4OhV%2BO1N1XNFmfsMXJasjxX85jT%2BYbEjjdrfBAXWiiaimP6KoX4dTHIg%2F27cvTD9cwrWdGSZXf0JHrSNBinmgDJo3p&hdnCourse=&hdnsem=&hdnsyl=&hdnstts=&txtrollno=18624&btnSearch=Search";
         const options = {
           headers: {
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "accept-language": "en-US,en;q=0.9",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "accept-language": "en-US,en;q=0.9,hi-IN;q=0.8,hi;q=0.7",
             "cache-control": "max-age=0",
             "content-type": "application/x-www-form-urlencoded",
             "upgrade-insecure-requests": "1",
             "Referer": "https://govexams.com/knit/searchresult.aspx",
-            "Referrer-Policy": "strict-origin-when-cross-origin"                              
+            "Referrer-Policy": "strict-origin-when-cross-origin"
           }
         };
         
@@ -60,14 +60,16 @@ exports.getResult_id = (roll, res, clb) => {
 };
 
 getResult_data = (rid, name)=>{
-    const options = {
-        headers: {
-          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-          "accept-language": "en-US,en;q=0.9",
-          "content-type": "application/x-www-form-urlencoded",
-          "Referer": "https://govexams.com/knit/searchresult.aspx",
-        }
-      };  
+  
+const options = {  
+  headers: {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "accept-language": "en-US,en;q=0.9,hi-IN;q=0.8,hi;q=0.7",
+    "content-type": "application/x-www-form-urlencoded",
+    "Referer": "https://govexams.com/knit/searchresult.aspx",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+    }
+};
       // console.log(i);
     axios.post(`http://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
             const htmlString = data.data;
