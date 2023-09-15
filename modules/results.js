@@ -47,15 +47,17 @@ exports.getResult_id = (roll, res, clb) => {
               getResult_data(result_id,result_name);
               cb(null,result_id);
           }
-      },(err,res)=>{
-        
-      }
+      },(_err,_res)=>{
+        if(_err){
+          throw _err;
+        }
+        if(res)
+          return res.status(200).json({message:"OK"});
+        if(clb){
+         clb();
+         } 
+       }
     )
-     if(res)
-      return res.status(200).json({message:"OK"});
-      if(clb){
-        setTimeout(clb,1000);
-      } 
    }); 
 };
 
