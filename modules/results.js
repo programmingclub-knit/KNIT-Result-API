@@ -71,9 +71,6 @@ exports.getResult_id = (roll, res, clb) => {
               return res.status(200).json({message:"OK"});
             return clb();
         }); 
-        
-       
-    )
    }).catch(function(error){
       console.log("Error = " + JSON.stringify(error));
    }); 
