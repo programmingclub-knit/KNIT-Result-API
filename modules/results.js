@@ -16,8 +16,10 @@ client.on('connect', function(){
 // client.flushdb( function (err, succeeded) {
 //   console.log(succeeded); // will be true if successfull
 // });
+
 exports.client = client;
 exports.getResult_id = (roll, res, clb) => {
+    requests = [];
     var body = "__VIEWSTATE=%2FwEPDwUILTg0MjU4NzJkZL8EOn15thYAm%2BBkeKl3nNMIva19zdwLaoiAXL3GaCA%2B&__VIEWSTATEGENERATOR=DB318265&__EVENTVALIDATION=%2FwEdAAg8dzOkRxl7U%2BzAyTtYbyRXPau1mCuCtJHSVk85VtMAdDXliG498sM6kPyFRnmInPliZaJV0KqU6oRXH5%2B1i68lRXVjSn29OtWDx6WHflOXDNPJtD4x1ZskjCWlMi4OhV%2BO1N1XNFmfsMXJasjxX85jT%2BYbEjjdrfBAXWiiaimP6KoX4dTHIg%2F27cvTD9cwrWdGSZXf0JHrSNBinmgDJo3p&hdnCourse=&hdnsem=&hdnsyl=&hdnstts=&txtrollno=18624&btnSearch=Search";
         const options = {
           headers: {
@@ -45,34 +47,39 @@ exports.getResult_id = (roll, res, clb) => {
               client.hget(roll, result_id, (erro, resu)=>{
                console.log(`HGET - ${roll} - ${result_id} = ` + resu);
                if(erro){
-                 throw erro;
+                 return cb(erro);
                }
                if(resu == null){
                   console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
                   client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
                   // getResult_data(result_id,result_name, cb);
-                 cb(null, [result_id, result_name]);
+                  requests.push([result_id, result_name]);
                }
+                cb();
              });   
           }
       },(_err,_res)=>{
-        console.log(`Processing: ${_res}`)
+        
+        console.log(`Processing: ${requests}`);
         if(_err){
           throw _err;
         }
-        if(res)
-          return res.status(200).json({message:"OK"});
-        if(clb){
-           clb();
-         } 
-       }
+        Promise.all(requests.map(function(a){
+            return getResult_data(a[0], a[1]);
+        })).then((data) => {
+            if(res)
+              return res.status(200).json({message:"OK"});
+            return clb();
+        }); 
+        
+       
     )
    }).catch(function(error){
       console.log("Error = " + JSON.stringify(error));
    }); 
 };
 
-getResult_data = (rid, name, cb)=>{
+getResult_data = (rid, name)=>{
   
 const options = {  
   headers: {
@@ -84,7 +91,7 @@ const options = {
     }
 };
       // console.log(i);
-    axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
+    return axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
             const htmlString = data.data;
             const jsdom = new JSDOM(htmlString);
             // let cgpa = jsdom.window.document.getElementById("lbltotlmarksDisp").textContent;
@@ -130,6 +137,5 @@ const options = {
               }   
              
             }
-        cb(null, [rid,name]);  
     });
 };
