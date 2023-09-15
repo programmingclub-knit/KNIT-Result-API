@@ -2,7 +2,6 @@ const axios = require("axios");
 const { JSDOM } = require('jsdom');
 const async = require("async");
 const redis = require('redis');
-const https = require('https');
 // Create Redis Client
 const client = redis.createClient({
   host: process.env.REDIS_HOSTNAME,
@@ -17,9 +16,6 @@ client.on('connect', function(){
 // client.flushdb( function (err, succeeded) {
 //   console.log(succeeded); // will be true if successfull
 // });
-const agent = new https.Agent({
-    rejectUnauthorized: false
-});
 exports.client = client;
 exports.getResult_id = (roll, res, clb) => {
     var body = "__VIEWSTATE=%2FwEPDwUILTg0MjU4NzJkZL8EOn15thYAm%2BBkeKl3nNMIva19zdwLaoiAXL3GaCA%2B&__VIEWSTATEGENERATOR=DB318265&__EVENTVALIDATION=%2FwEdAAg8dzOkRxl7U%2BzAyTtYbyRXPau1mCuCtJHSVk85VtMAdDXliG498sM6kPyFRnmInPliZaJV0KqU6oRXH5%2B1i68lRXVjSn29OtWDx6WHflOXDNPJtD4x1ZskjCWlMi4OhV%2BO1N1XNFmfsMXJasjxX85jT%2BYbEjjdrfBAXWiiaimP6KoX4dTHIg%2F27cvTD9cwrWdGSZXf0JHrSNBinmgDJo3p&hdnCourse=&hdnsem=&hdnsyl=&hdnstts=&txtrollno=18624&btnSearch=Search";
@@ -35,7 +31,7 @@ exports.getResult_id = (roll, res, clb) => {
           }
         };
         
-    axios.post('https://govexams.com/knit/searchresult.aspx', body, options, { httpsAgent: agent }).then(result => {
+    axios.post('https://govexams.com/knit/searchresult.aspx', body, options).then(result => {
         var htmlString = result.data;
         const jsdom = new JSDOM(htmlString);
          
@@ -44,10 +40,15 @@ exports.getResult_id = (roll, res, clb) => {
       async.map(element.childNodes,(ele, cb)=>{
            var result_id = ele.value;
            var result_name = ele.textContent;
-           if(result_id != 0 && result_id !== undefined)  {
-              client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
-              getResult_data(result_id,result_name);
-              cb(null,result_id);
+           
+           if(result_id != 0 && result_id !== undefined) {
+              console.log(`HGET :-  ${roll} - ${result_id}` + client.hget(roll, result_id));
+              if(!!client.hget(roll, result_id)){
+                console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
+               client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
+               getResult_data(result_id,result_name);
+               cb(null,result_id);
+             }   
           }
       },(_err,_res)=>{
         if(_err){
@@ -77,7 +78,7 @@ const options = {
     }
 };
       // console.log(i);
-    axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options, { httpsAgent: agent }).then(data => {
+    axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
             const htmlString = data.data;
             const jsdom = new JSDOM(htmlString);
             // let cgpa = jsdom.window.document.getElementById("lbltotlmarksDisp").textContent;
