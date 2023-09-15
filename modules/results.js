@@ -42,7 +42,7 @@ exports.getResult_id = (roll, res, clb) => {
            var result_name = ele.textContent;
            
            if(result_id != 0 && result_id !== undefined) {
-             await client.hget(roll, result_id, (erro, resu)=>{
+              client.hget(roll, result_id, (erro, resu)=>{
                console.log(`HGET - ${roll} - ${result_id} = ` + resu);
                if(erro){
                  throw erro;
