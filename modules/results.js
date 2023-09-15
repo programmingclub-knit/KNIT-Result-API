@@ -50,12 +50,12 @@ exports.getResult_id = (roll, res, clb) => {
                if(resu == null){
                   console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
                   client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
-                  getResult_data(result_id,result_name);
-                  cb(null,result_id); 
+                  getResult_data(result_id,result_name, cb);
                }
              });   
           }
       },(_err,_res)=>{
+        console.log(`Processed: ${res}`)
         if(_err){
           throw _err;
         }
@@ -71,7 +71,7 @@ exports.getResult_id = (roll, res, clb) => {
    }); 
 };
 
-getResult_data = (rid, name)=>{
+getResult_data = (rid, name, cb)=>{
   
 const options = {  
   headers: {
@@ -129,5 +129,6 @@ const options = {
               }   
              
             }
+        cb(null, [rid,name]);  
     });
 };
