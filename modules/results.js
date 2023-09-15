@@ -56,7 +56,7 @@ exports.getResult_id = (roll, res, clb) => {
              });   
           }
       },(_err,_res)=>{
-        console.log(`Processing: ${res}`)
+        console.log(`Processing: ${_res}`)
         if(_err){
           throw _err;
         }
