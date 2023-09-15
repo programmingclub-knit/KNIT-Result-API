@@ -47,7 +47,7 @@ exports.getResult_id = (roll, res, clb) => {
                if(erro){
                  throw erro;
                }
-               if(!!resu && !erro){
+               if(resu == null){
                   console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
                   client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
                   getResult_data(result_id,result_name);
