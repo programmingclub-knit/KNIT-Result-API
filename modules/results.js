@@ -33,7 +33,7 @@ exports.getResult_id = (roll, res, clb) => {
           }
         };
         
-    axios.post('http://govexams.com/knit/searchresult.aspx', body, options).then(result => {
+    axios.post('https://govexams.com/knit/searchresult.aspx', body, options).then(result => {
         var htmlString = result.data;
         const jsdom = new JSDOM(htmlString);
          
@@ -75,7 +75,7 @@ const options = {
     }
 };
       // console.log(i);
-    axios.post(`http://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
+    axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
             const htmlString = data.data;
             const jsdom = new JSDOM(htmlString);
             // let cgpa = jsdom.window.document.getElementById("lbltotlmarksDisp").textContent;
