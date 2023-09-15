@@ -50,12 +50,13 @@ exports.getResult_id = (roll, res, clb) => {
                if(resu == null){
                   console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
                   client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
-                  getResult_data(result_id,result_name, cb);
+                  // getResult_data(result_id,result_name, cb);
+                 cb(null, [result_id, result_name]);
                }
              });   
           }
       },(_err,_res)=>{
-        console.log(`Processed: ${res}`)
+        console.log(`Processing: ${res}`)
         if(_err){
           throw _err;
         }
