@@ -101,7 +101,12 @@ const options = {
                 //  str = str.replace(/[ ]{0,}/,' ');
                  dat.push(str);
                }
+              if(dat.length == 1){
+                 dat.push("");
+              }
+              if(dat.length > 0){
                client.hmset(rid, dat[0], dat[1],"name", name,err => {if(err)console.log(err)});
+              }  
             }
             
             
