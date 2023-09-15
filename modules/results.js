@@ -71,10 +71,10 @@ exports.getResult_id = (roll, res, clb) => {
               return res.status(200).json({message:"OK"});
             return clb();
         }); 
-   }).catch(function(error){
+   });
+}).catch(function(error){
       console.log("Error = " + JSON.stringify(error));
    }); 
-})
 };
 
 getResult_data = (rid, name)=>{
