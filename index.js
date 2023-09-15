@@ -7,13 +7,13 @@ var port = process.env.PORT || 3000;
 
 function cache_check(roll,_callback){
   console.log("callback"+roll);
-  client.exists(roll,(err, reply)=>{
-    if(reply == 0){
-      console.log("Not in cache");
+  // client.exists(roll,(err, reply)=>{
+  //   if(reply == 0){
+  //     console.log("Not in cache");
       getResult_id(roll,undefined,_callback);
-    } 
-    else _callback();
-  })
+  //   } 
+  //   else _callback();
+  // })
 }
 
 app.get("/",async (req, res) => {
@@ -23,7 +23,6 @@ app.get("/",async (req, res) => {
       return res.status(400).send({message:"Wrong Parameters"});
     }   
     getResult_id(roll, res);
-
 });
 app.get("/cache",async (req, res) => {
   console.log(req.query.roll);
