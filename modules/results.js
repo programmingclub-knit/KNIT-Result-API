@@ -3,7 +3,7 @@ const e = require("express");
 const { JSDOM } = require('jsdom');
 const async = require("async");
 const redis = require('redis');
-
+const https = require('https');
 // Create Redis Client
 let client = redis.createClient();
 client.on('connect', function(){
@@ -13,7 +13,9 @@ client.on('connect', function(){
 // client.flushdb( function (err, succeeded) {
 //   console.log(succeeded); // will be true if successfull
 // });
-
+const agent = new https.Agent({
+    rejectUnauthorized: false
+});
 exports.client = client;
 exports.getResult_id = (roll, res, clb) => {
     var body = `__VIEWSTATE=%2FwEPDwUILTg0MjU4NzIPZBYCAgMPZBYCAg0PEGQQFQQMLS0tU0VMRUNULS0tHlJFR1VMQVIgKDIwMjAtMjEpIFNlbWVzdGVyIDUtNh5SRUdVTEFSICgyMDE5LTIwKSBTZW1lc3RlciAzLTQeUkVHVUxBUiAoMjAxOC0xOSkgU2VtZXN0ZXIgMS0yFQQBMAUyNjQ2NAUyMjU4NwUxMzg2MhQrAwRnZ2dnZGRkT0Fi%2FBERAbi1uwskxzG%2BlLAJtOtXGEHHfX6ZE3nmBZk%3D&__VIEWSTATEGENERATOR=DB318265&__EVENTVALIDATION=%2FwEdAAxFDxZsB7U7Mr0OMg2h7n7UPau1mCuCtJHSVk85VtMAdDXliG498sM6kPyFRnmInPliZaJV0KqU6oRXH5%2B1i68lRXVjSn29OtWDx6WHflOXDNPJtD4x1ZskjCWlMi4OhV%2BO1N1XNFmfsMXJasjxX85jwWQRnAmXw%2F6HLW40JR6%2F6m7T4XcIIkhMxHxZFaWqrZ7vUYtVl4HZU8C7SmoRKtLik2NTAc7tYwQ6Dz2X5p%2BJt0%2FmGxI43a3wQF1oomopj%2BhwFUnRqpCBQzeo3%2B%2B1zmpQf3%2B17nV%2FdYRVF%2FCz9tfZDw%3D%3D&hdnCourse=04&hdnsem=1&hdnsyl=G&hdnstts=PASS&txtrollno=${roll}&btnSearch=Search&ddlResult=0`;
@@ -29,7 +31,7 @@ exports.getResult_id = (roll, res, clb) => {
           }
         };
         
-    axios.post('https://govexams.com/knit/searchresult.aspx', body, options).then(result => {
+    axios.post('https://govexams.com/knit/searchresult.aspx', body, options, { httpsAgent: agent }).then(result => {
         var htmlString = result.data;
         const jsdom = new JSDOM(htmlString);
          
@@ -65,7 +67,7 @@ getResult_data = (rid, name)=>{
         }
       };  
       // console.log(i);
-    axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options).then(data => {
+    axios.post(`https://govexams.com/knit/displayResultsEvenN.aspx?key=${rid}`,{}, options, { httpsAgent: agent }).then(data => {
             const htmlString = data.data;
             const jsdom = new JSDOM(htmlString);
             // let cgpa = jsdom.window.document.getElementById("lbltotlmarksDisp").textContent;
