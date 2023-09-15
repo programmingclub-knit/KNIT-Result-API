@@ -58,6 +58,8 @@ exports.getResult_id = (roll, res, clb) => {
          } 
        }
     )
+   }).catch(function(error){
+      console.log("Error = " + JSON.stringify(error));
    }); 
 };
 
