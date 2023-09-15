@@ -42,13 +42,18 @@ exports.getResult_id = (roll, res, clb) => {
            var result_name = ele.textContent;
            
            if(result_id != 0 && result_id !== undefined) {
-              console.log(`HGET :-  ${roll} - ${result_id}` + client.hget(roll, result_id));
-              if(!!client.hget(roll, result_id)){
-                console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
-               client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
-               getResult_data(result_id,result_name);
-               cb(null,result_id);
-             }   
+             await client.hget(roll, result_id, (erro, resu)=>{
+               console.log(`HGET - ${roll} - ${result_id} = ` + resu);
+               if(erro){
+                 throw erro;
+               }
+               if(!!resu && !erro){
+                  console.log(`Fetching ${roll} - ${result_id} - ${result_name}`)
+                  client.hmset(roll, result_id, result_name,(err)=>{if(err)console.log(err);});
+                  getResult_data(result_id,result_name);
+                  cb(null,result_id); 
+               }
+             });   
           }
       },(_err,_res)=>{
         if(_err){
